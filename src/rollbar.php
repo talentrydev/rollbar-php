@@ -136,7 +136,7 @@ class RollbarNotifier {
     public $host = null;
     /** @var iRollbarLogger */
     public $logger = null;
-    public $included_errno = ROLLBAR_INCLUDED_ERRNO_BITMASK;
+    public $included_errno;
     public $person = null;
     public $person_fn = null;
     public $root = '';
@@ -215,6 +215,12 @@ class RollbarNotifier {
 
         // cache this value
         $this->_mt_randmax = mt_getrandmax();
+
+        if (!defined('ROLLBAR_INCLUDED_ERRNO_BITMASK')) {
+            define('ROLLBAR_INCLUDED_ERRNO_BITMASK', E_ERROR | E_WARNING | E_PARSE | E_CORE_ERROR | E_USER_ERROR | E_RECOVERABLE_ERROR);
+        }
+
+        $this->included_errno = ROLLBAR_INCLUDED_ERRNO_BITMASK;
     }
 
     public function report_exception($exc, $extra_data = null, $payload_data = null) {
